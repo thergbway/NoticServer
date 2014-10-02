@@ -1,19 +1,20 @@
-import ServerConfiguration.ServerConfiguration
-import LoggingUtils.*
+import WebServer.WebServer
+import WebServer.WebServerMethodInvoker
+import LoggingUtils.Loggers
+import LoggingUtils.LoggingUtils
 
 fun main(args: Array<String>) {
-    val prop1 = ServerConfiguration.getProperty("dropDBOnStart")
-    val prop2 = ServerConfiguration.getProperty("port")
-    val prop3 = ServerConfiguration.getProperty("entry")
-    println(prop1)
-    println(prop2)
-    println(prop3)
-
     LoggingUtils.initLoggingSystem()
+    Loggers.mainCycle.info("Initializing application")
 
-    Loggers.root.error("Error example")
-    Loggers.root.debug("Debug example")
-    Loggers.root.info("Info example")
-    Loggers.root.warn("Warn message")
+    val webServer = WebServer(object : WebServerMethodInvoker {
 
+        override fun userCreate(login: String, password: String): String {
+            println("user create called")
+            return "Success"
+        }
+    })
+    webServer.start()
+    Thread.sleep(600000L)
+    webServer.stop()
 }
