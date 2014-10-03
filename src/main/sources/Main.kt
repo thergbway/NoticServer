@@ -2,6 +2,7 @@ import WebServer.WebServer
 import WebServer.WebServerMethodInvoker
 import LoggingUtils.Loggers
 import LoggingUtils.LoggingUtils
+import DAO.DAO
 import java.sql.Connection
 import java.sql.DriverManager
 import java.sql.SQLException
@@ -20,7 +21,7 @@ fun main(args: Array<String>) {
     webServer.start()
     webServer.stop()
 
-    DAO.DAO()
+    DAO.addNewUser("random", "aoperg")
 }
 
 fun sqliteTest() {
