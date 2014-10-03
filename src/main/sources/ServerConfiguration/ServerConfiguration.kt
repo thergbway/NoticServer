@@ -25,6 +25,8 @@ object ServerConfiguration {
             "dropDBOnStart" -> if (propertyValue == "true") true else false
             "port" -> Integer.parseInt(propertyValue)
             "entry" -> propertyValue
+            "jdbcDriverName" -> propertyValue
+            "connectionToDB" -> propertyValue
             else -> throw RuntimeException("Unknown property key: $propertyKey with value $propertyValue")
         }
     }

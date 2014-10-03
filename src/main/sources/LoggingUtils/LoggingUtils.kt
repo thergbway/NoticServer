@@ -13,4 +13,5 @@ public object Loggers {
     public val root: Logger = Logger.getRootLogger() as Logger
     public val mainCycle: Logger = Logger.getLogger("MainCycle") as Logger
     public val webServer: Logger = Logger.getLogger("WebServer") as Logger
+    public val db: Logger = Logger.getLogger("DataAccessObject") as Logger
 }
