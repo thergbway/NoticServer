@@ -9,6 +9,6 @@ fun main(args: Array<String>) {
 
     val webServer = WebServer(WebServerMethodInvokerImpl())
     webServer.start()
-    Thread.sleep(400000L)
+    Thread.sleep(4000000L)
     webServer.stop()
 }

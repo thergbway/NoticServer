@@ -2,11 +2,12 @@ package WebServer
 
 import org.junit.Test as test
 import kotlin.test.fail
+import WebServer.MethodInvokeResultCodes.UserCreateMethodReturnCodes
 
 class WebServerTest{
     test fun shouldStartAndStop() {
         val webServer = WebServer.WebServer(object : WebServer.WebServerMethodInvoker{
-            override fun userCreate(login: String, password: String): String {
+            override fun userCreate(login: String, password: String): UserCreateMethodReturnCodes {
                 throw UnsupportedOperationException()
             }
         })
@@ -15,7 +16,7 @@ class WebServerTest{
     }
     test fun shouldThrowExceptionOnPortCallWhenServerIsStopped() {
         val webServer = WebServer.WebServer(object : WebServer.WebServerMethodInvoker{
-            override fun userCreate(login: String, password: String): String {
+            override fun userCreate(login: String, password: String): UserCreateMethodReturnCodes {
                 throw UnsupportedOperationException()
             }
         })

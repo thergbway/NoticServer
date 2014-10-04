@@ -66,7 +66,7 @@ public object DAO {
                         ")").forEach {
             var sql = it
             Loggers.db.info("...sql: $sql")
-            st.executeUpdate(sql as String)
+            st.executeUpdate(sql)
         }
         st.close()
     }
