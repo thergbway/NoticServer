@@ -3,24 +3,24 @@ package WebServer
 import org.junit.Test as test
 import kotlin.test.assertEquals
 
-import WebServer.MethodInvokeResultCodes.UserCreateMethodReturnCodes
+import WebServer.MethodInvokeResult.ResultCodes
 
 class MethodInvokesValidatorTest {
     test fun shouldValidateLogin() {
-        assertEquals(MethodInvokesValidator.checkForErrorsInUserCreateMethodParams("valid_login_14235f", "password"),
+        assertEquals(MethodInvokesValidator.checkForErrorsInLoginAndPassword("valid_login_14235f", "password"),
                 null)
-        assertEquals(MethodInvokesValidator.checkForErrorsInUserCreateMethodParams("@invalid_login_14235f", "password"),
-                UserCreateMethodReturnCodes.INVALID_LOGIN_ERROR)
-        assertEquals(MethodInvokesValidator.checkForErrorsInUserCreateMethodParams("invalid_login_14235    f", "password"),
-                UserCreateMethodReturnCodes.INVALID_LOGIN_ERROR)
+        assertEquals(MethodInvokesValidator.checkForErrorsInLoginAndPassword("@invalid_login_14235f", "password"),
+                ResultCodes.INVALID_LOGIN_ERROR)
+        assertEquals(MethodInvokesValidator.checkForErrorsInLoginAndPassword("invalid_login_14235    f", "password"),
+                ResultCodes.INVALID_LOGIN_ERROR)
     }
 
     test fun shouldValidatePassword() {
-        assertEquals(MethodInvokesValidator.checkForErrorsInUserCreateMethodParams("valid_login_12f", "valid_pass_123"),
+        assertEquals(MethodInvokesValidator.checkForErrorsInLoginAndPassword("valid_login_12f", "valid_pass_123"),
                 null)
-        assertEquals(MethodInvokesValidator.checkForErrorsInUserCreateMethodParams("valid_login_12f", "@invalid_pass_123"),
-                UserCreateMethodReturnCodes.INVALID_PASSWORD_ERROR)
-        assertEquals(MethodInvokesValidator.checkForErrorsInUserCreateMethodParams("valid_login_12f", "invalid!"),
-                UserCreateMethodReturnCodes.INVALID_PASSWORD_ERROR)
+        assertEquals(MethodInvokesValidator.checkForErrorsInLoginAndPassword("valid_login_12f", "@invalid_pass_123"),
+                ResultCodes.INVALID_PASSWORD_ERROR)
+        assertEquals(MethodInvokesValidator.checkForErrorsInLoginAndPassword("valid_login_12f", "invalid!"),
+                ResultCodes.INVALID_PASSWORD_ERROR)
     }
 }

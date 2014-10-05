@@ -1,6 +1,6 @@
 package DAO
 
-import WebServer.MethodInvokeResultCodes.UserCreateMethodReturnCodes
+import WebServer.MethodInvokeResult.*
 
 import ServerConfiguration.ServerConfiguration
 import LoggingUtils.Loggers
@@ -28,9 +28,9 @@ public object DAO {
         Loggers.db.info("Data Access Object was initialized")
     }
 
-    public fun addNewUser(login: String, password: String): UserCreateMethodReturnCodes {
+    public fun addNewUser(login: String, password: String): ResultCodes {
         if (isUserExisting(login))
-            return UserCreateMethodReturnCodes.USER_EXISTS_ERROR
+            return ResultCodes.USER_EXISTS_ERROR
 
         val st = connection.createStatement()!!
         val sql = "insert into Users (login, password) values ('$login', '$password');"
@@ -38,7 +38,52 @@ public object DAO {
         st.executeUpdate(sql)
         st.close()
 
-        return UserCreateMethodReturnCodes.SUCCESS
+        return ResultCodes.SUCCESS
+    }
+
+    public fun getAllNoteIds(login: String, password: String): UserGetAllNotesReturnResult {
+        if (!isUserExisting(login))
+            return UserGetAllNotesReturnResult(ResultCodes.USER_NOT_EXISTS_ERROR.JSONRPCCode, null)
+
+        if (!isValidUser(User(login, password)))
+            return UserGetAllNotesReturnResult(ResultCodes.VERIFICATION_ERROR.JSONRPCCode, null)
+
+        val noteIds = getNoteIdsForUser(getUser(login))
+        return UserGetAllNotesReturnResult(ResultCodes.SUCCESS.JSONRPCCode, noteIds.copyToArray())
+    }
+
+    public fun getNotesWithIdsForUser(login: String, password: String, noteIds: Array<Long>): UserGetNotesWithIdsReturnResult {
+        if (!isUserExisting(login))
+            return UserGetNotesWithIdsReturnResult(ResultCodes.USER_NOT_EXISTS_ERROR.JSONRPCCode, null)
+        if (!isValidUser(User(login, password)))
+            return UserGetNotesWithIdsReturnResult(ResultCodes.VERIFICATION_ERROR.JSONRPCCode, null)
+        if (!isAllNoteIdsExisting(noteIds.toList()) || isAllNoteIdsCorrespondsToUser(noteIds.toList(), User(login, password)))
+            return UserGetNotesWithIdsReturnResult(ResultCodes.NOTE_NOT_EXISTS_ERROR.JSONRPCCode, null)
+
+        val notes = getAllNotesWithIds(noteIds.toList())
+        return UserGetNotesWithIdsReturnResult(ResultCodes.SUCCESS.JSONRPCCode, notes.copyToArray())
+    }
+
+    public fun addNoteForUser(login: String, password: String, title: String, text: String): UserAddNoteReturnResult {
+        if (!isUserExisting(login))
+            return UserAddNoteReturnResult(ResultCodes.USER_NOT_EXISTS_ERROR.JSONRPCCode, null)
+        if (!isValidUser(User(login, password)))
+            return UserAddNoteReturnResult(ResultCodes.VERIFICATION_ERROR.JSONRPCCode, null)
+
+        val noteId = addNewNoteForUser(login, title, text)
+        return UserAddNoteReturnResult(ResultCodes.SUCCESS.JSONRPCCode, noteId)
+    }
+
+    public fun deleteNoteForUser(login: String, password: String, noteId: Long): UserDeleteNoteReturnResult {
+        if (!isUserExisting(login))
+            return UserDeleteNoteReturnResult(ResultCodes.USER_NOT_EXISTS_ERROR.JSONRPCCode)
+        if (!isValidUser(User(login, password)))
+            return UserDeleteNoteReturnResult(ResultCodes.VERIFICATION_ERROR.JSONRPCCode)
+        if (!isAllNoteIdsExisting(listOf(noteId)) || !isAllNoteIdsCorrespondsToUser(listOf(noteId), User(login, password)))
+            return UserDeleteNoteReturnResult(ResultCodes.NOTE_NOT_EXISTS_ERROR.JSONRPCCode)
+
+        deleteNote(noteId)
+        return UserDeleteNoteReturnResult(ResultCodes.SUCCESS.JSONRPCCode)
     }
 
     private fun dropDataBase() {
@@ -79,6 +124,36 @@ public object DAO {
         val result = rs.next()
         st.close()
         return result
+    }
+
+    private fun isValidUser(userToCheck: User): Boolean {
+        val userInDB = getUser(userToCheck.login!!)
+        return userInDB.password == userToCheck.password
+    }
+
+    private fun addNewNoteForUser(userLogin: String, title: String, text: String): Long {
+        val st = connection.createStatement()!!
+        val sqlInsert = "insert into Notes (userLogin, title, text) values ('$userLogin', '$title', '$text');"
+        Loggers.db.info("...sql: $sqlInsert")
+        st.executeUpdate(sqlInsert)
+
+        val sqlSelect = "select id from Notes where userLogin = '$userLogin' and title = '$title' and text = '$text';"
+        Loggers.db.info("...sql: $sqlInsert")
+        val rs = st.executeQuery(sqlSelect)
+        rs.next()
+        val id = rs.getLong("id")
+        st.close()
+
+        return id
+    }
+
+    private fun deleteNote(id: Long) {
+        val st = connection.createStatement()!!
+        val sql = "delete from Notes where id = '$id';"
+        Loggers.db.info("...sql: $sql")
+
+        st.executeUpdate(sql)
+        st.close()
     }
 
     private fun getUser(login: String): User {
