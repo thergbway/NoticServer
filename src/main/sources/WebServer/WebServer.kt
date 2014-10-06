@@ -29,6 +29,7 @@ public class WebServer(methodInvoker: WebServerMethodInvoker) {
         handler.getServletContext()!!.setAttribute(WEB_SERVICE_SERVLET_NAME(), methodInvoker)
 
         Loggers.webServer.info("Web server started at port $port")
+        Loggers.webServer.info("JsonRpc Api is opened under the name $entry")
     }
 
     public fun stop() {
