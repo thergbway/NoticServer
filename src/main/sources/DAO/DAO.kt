@@ -41,49 +41,49 @@ public object DAO {
         return ResultCodes.SUCCESS
     }
 
-    public fun getAllNoteIds(login: String, password: String): UserGetAllNotesReturnResult {
+    public fun getAllNoteIds(login: String, password: String): UserGetAllNoteIdsReturnResult {
         if (!isUserExisting(login))
-            return UserGetAllNotesReturnResult(ResultCodes.USER_NOT_EXISTS_ERROR.JSONRPCCode, null)
+            return UserGetAllNoteIdsReturnResult(ResultCodes.USER_NOT_EXISTS_ERROR.jsonRpcCode, null)
 
         if (!isValidUser(User(login, password)))
-            return UserGetAllNotesReturnResult(ResultCodes.VERIFICATION_ERROR.JSONRPCCode, null)
+            return UserGetAllNoteIdsReturnResult(ResultCodes.VERIFICATION_ERROR.jsonRpcCode, null)
 
         val noteIds = getNoteIdsForUser(getUser(login))
-        return UserGetAllNotesReturnResult(ResultCodes.SUCCESS.JSONRPCCode, noteIds.copyToArray())
+        return UserGetAllNoteIdsReturnResult(ResultCodes.SUCCESS.jsonRpcCode, noteIds.copyToArray())
     }
 
     public fun getNotesWithIdsForUser(login: String, password: String, noteIds: Array<Long>): UserGetNotesWithIdsReturnResult {
         if (!isUserExisting(login))
-            return UserGetNotesWithIdsReturnResult(ResultCodes.USER_NOT_EXISTS_ERROR.JSONRPCCode, null)
+            return UserGetNotesWithIdsReturnResult(ResultCodes.USER_NOT_EXISTS_ERROR.jsonRpcCode, null)
         if (!isValidUser(User(login, password)))
-            return UserGetNotesWithIdsReturnResult(ResultCodes.VERIFICATION_ERROR.JSONRPCCode, null)
-        if (!isAllNoteIdsExisting(noteIds.toList()) || isAllNoteIdsCorrespondsToUser(noteIds.toList(), User(login, password)))
-            return UserGetNotesWithIdsReturnResult(ResultCodes.NOTE_NOT_EXISTS_ERROR.JSONRPCCode, null)
+            return UserGetNotesWithIdsReturnResult(ResultCodes.VERIFICATION_ERROR.jsonRpcCode, null)
+        if (!isAllNoteIdsExisting(noteIds.toList()) || !isAllNoteIdsCorrespondsToUser(noteIds.toList(), User(login, password)))
+            return UserGetNotesWithIdsReturnResult(ResultCodes.NOTE_NOT_EXISTS_ERROR.jsonRpcCode, null)
 
         val notes = getAllNotesWithIds(noteIds.toList())
-        return UserGetNotesWithIdsReturnResult(ResultCodes.SUCCESS.JSONRPCCode, notes.copyToArray())
+        return UserGetNotesWithIdsReturnResult(ResultCodes.SUCCESS.jsonRpcCode, notes.copyToArray())
     }
 
     public fun addNoteForUser(login: String, password: String, title: String, text: String): UserAddNoteReturnResult {
         if (!isUserExisting(login))
-            return UserAddNoteReturnResult(ResultCodes.USER_NOT_EXISTS_ERROR.JSONRPCCode, null)
+            return UserAddNoteReturnResult(ResultCodes.USER_NOT_EXISTS_ERROR.jsonRpcCode, null)
         if (!isValidUser(User(login, password)))
-            return UserAddNoteReturnResult(ResultCodes.VERIFICATION_ERROR.JSONRPCCode, null)
+            return UserAddNoteReturnResult(ResultCodes.VERIFICATION_ERROR.jsonRpcCode, null)
 
         val noteId = addNewNoteForUser(login, title, text)
-        return UserAddNoteReturnResult(ResultCodes.SUCCESS.JSONRPCCode, noteId)
+        return UserAddNoteReturnResult(ResultCodes.SUCCESS.jsonRpcCode, noteId)
     }
 
     public fun deleteNoteForUser(login: String, password: String, noteId: Long): UserDeleteNoteReturnResult {
         if (!isUserExisting(login))
-            return UserDeleteNoteReturnResult(ResultCodes.USER_NOT_EXISTS_ERROR.JSONRPCCode)
+            return UserDeleteNoteReturnResult(ResultCodes.USER_NOT_EXISTS_ERROR.jsonRpcCode)
         if (!isValidUser(User(login, password)))
-            return UserDeleteNoteReturnResult(ResultCodes.VERIFICATION_ERROR.JSONRPCCode)
+            return UserDeleteNoteReturnResult(ResultCodes.VERIFICATION_ERROR.jsonRpcCode)
         if (!isAllNoteIdsExisting(listOf(noteId)) || !isAllNoteIdsCorrespondsToUser(listOf(noteId), User(login, password)))
-            return UserDeleteNoteReturnResult(ResultCodes.NOTE_NOT_EXISTS_ERROR.JSONRPCCode)
+            return UserDeleteNoteReturnResult(ResultCodes.NOTE_NOT_EXISTS_ERROR.jsonRpcCode)
 
         deleteNote(noteId)
-        return UserDeleteNoteReturnResult(ResultCodes.SUCCESS.JSONRPCCode)
+        return UserDeleteNoteReturnResult(ResultCodes.SUCCESS.jsonRpcCode)
     }
 
     private fun dropDataBase() {
@@ -224,7 +224,7 @@ public object DAO {
                 append(" id = $it or")
             }
         }
-        sb.delete(sb.length() - 1 - 3, sb.length() - 1)
+        sb.delete(sb.length() - 3, sb.length())
         sb.append(";")
         val sql = sb.toString()
         Loggers.db.info("...sql: $sql")

@@ -6,9 +6,12 @@ import LoggingUtils.LoggingUtils
 fun main(args: Array<String>) {
     LoggingUtils.initLoggingSystem()
     Loggers.mainCycle.info("Initializing application")
+    Loggers.mainCycle.info("Press Ctrl+C to stop the server")
 
     val webServer = WebServer(WebServerMethodInvokerImpl())
     webServer.start()
-    Thread.sleep(4000000L)
-    webServer.stop()
+
+    Runtime.getRuntime().addShutdownHook(Thread({
+        webServer.stop()
+    }))
 }

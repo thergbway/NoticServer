@@ -3,7 +3,7 @@ package WebServer
 import com.googlecode.jsonrpc4j.JsonRpcMethod as rpcMethod
 import com.googlecode.jsonrpc4j.JsonRpcParam as rpcParam
 import LoggingUtils.Loggers
-import WebServer.MethodInvokeResult.UserGetAllNotesReturnResult
+import WebServer.MethodInvokeResult.UserGetAllNoteIdsReturnResult
 import WebServer.MethodInvokeResult.UserGetNotesWithIdsReturnResult
 import WebServer.MethodInvokeResult.UserAddNoteReturnResult
 import WebServer.MethodInvokeResult.UserDeleteNoteReturnResult
@@ -15,12 +15,12 @@ private class WebService(methodInvoker: WebServerMethodInvoker) {
     public fun userCreate(rpcParam("login") login: String,
                           rpcParam("password") password: String): String {
         Loggers.webServer.info("Method user.create with login=$login invoked")
-        return methodInvoker.userCreate(login, password).JSONRPCCode
+        return methodInvoker.userCreate(login, password).jsonRpcCode
     }
 
     rpcMethod("user.getAllNoteIds")
     public fun userGetAllNotes(rpcParam("login") login: String,
-                               rpcParam("password") password: String): UserGetAllNotesReturnResult {
+                               rpcParam("password") password: String): UserGetAllNoteIdsReturnResult {
         Loggers.webServer.info("Method user.getAllNoteIds with login=$login invoked")
         return methodInvoker.userGetAllNoteIds(login, password)
     }

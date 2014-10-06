@@ -10,7 +10,7 @@ class WebServerTest{
             override fun userCreate(login: String, password: String): MethodInvokeResult.ResultCodes {
                 throw UnsupportedOperationException()
             }
-            override fun userGetAllNoteIds(login: String, password: String): MethodInvokeResult.UserGetAllNotesReturnResult {
+            override fun userGetAllNoteIds(login: String, password: String): MethodInvokeResult.UserGetAllNoteIdsReturnResult {
                 throw UnsupportedOperationException()
             }
             override fun userGetNotesWithIds(login: String, password: String, noteIds: Array<Long>): MethodInvokeResult.UserGetNotesWithIdsReturnResult {
@@ -32,7 +32,7 @@ class WebServerTest{
             override fun userCreate(login: String, password: String): MethodInvokeResult.ResultCodes {
                 throw UnsupportedOperationException()
             }
-            override fun userGetAllNoteIds(login: String, password: String): MethodInvokeResult.UserGetAllNotesReturnResult {
+            override fun userGetAllNoteIds(login: String, password: String): MethodInvokeResult.UserGetAllNoteIdsReturnResult {
                 throw UnsupportedOperationException()
             }
             override fun userGetNotesWithIds(login: String, password: String, noteIds: Array<Long>): MethodInvokeResult.UserGetNotesWithIdsReturnResult {

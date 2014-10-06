@@ -12,10 +12,10 @@ public class WebServerMethodInvokerImpl() : WebServerMethodInvoker {
         return DAO.addNewUser(login, password)
     }
 
-    override fun userGetAllNoteIds(login: String, password: String): UserGetAllNotesReturnResult {
+    override fun userGetAllNoteIds(login: String, password: String): UserGetAllNoteIdsReturnResult {
         var checkForErrorResult = MethodInvokesValidator.checkForErrorsInLoginAndPassword(login, password)
         if (checkForErrorResult != null)
-            return UserGetAllNotesReturnResult(checkForErrorResult!!.JSONRPCCode, null)
+            return UserGetAllNoteIdsReturnResult(checkForErrorResult!!.jsonRpcCode, null)
 
         return DAO.getAllNoteIds(login, password)
     }
@@ -23,7 +23,7 @@ public class WebServerMethodInvokerImpl() : WebServerMethodInvoker {
     override fun userGetNotesWithIds(login: String, password: String, noteIds: Array<Long>): UserGetNotesWithIdsReturnResult {
         var checkForErrorResult = MethodInvokesValidator.checkForErrorsInLoginAndPassword(login, password)
         if (checkForErrorResult != null)
-            return UserGetNotesWithIdsReturnResult(checkForErrorResult!!.JSONRPCCode, null)
+            return UserGetNotesWithIdsReturnResult(checkForErrorResult!!.jsonRpcCode, null)
 
         return DAO.getNotesWithIdsForUser(login, password, noteIds)
     }
@@ -31,7 +31,7 @@ public class WebServerMethodInvokerImpl() : WebServerMethodInvoker {
     override fun userAddNote(login: String, password: String, title: String, text: String): UserAddNoteReturnResult {
         var checkForErrorResult = MethodInvokesValidator.checkForErrorsInLoginAndPassword(login, password)
         if (checkForErrorResult != null)
-            return UserAddNoteReturnResult(checkForErrorResult!!.JSONRPCCode, null)
+            return UserAddNoteReturnResult(checkForErrorResult!!.jsonRpcCode, null)
 
         return DAO.addNoteForUser(login, password, title, text)
     }
@@ -39,7 +39,7 @@ public class WebServerMethodInvokerImpl() : WebServerMethodInvoker {
     override fun userDeleteNote(login: String, password: String, noteId: Long): UserDeleteNoteReturnResult {
         var checkForErrorResult = MethodInvokesValidator.checkForErrorsInLoginAndPassword(login, password)
         if (checkForErrorResult != null)
-            return UserDeleteNoteReturnResult(checkForErrorResult!!.JSONRPCCode)
+            return UserDeleteNoteReturnResult(checkForErrorResult!!.jsonRpcCode)
 
         return DAO.deleteNoteForUser(login, password, noteId)
     }
